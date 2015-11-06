@@ -1,0 +1,7 @@
+__pycache__
+.R*
+*.R
+a.py
+*.csv
+*.txt
+main.py
