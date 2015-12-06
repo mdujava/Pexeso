@@ -4,6 +4,49 @@ import copy
 
 class Game:
 
+    def inicializeEngines(self, engineOne, engineTwo = None):
+        self.engineOne = engineOne
+        self.engineOneScore = 0
+        self.engineTwo = engineTwo
+        self.engineTwoScore = 0
+        self.whichIsOnMove = 0
+
+    def __init__(self, numberOfPairs, debug = False):
+        self.numberOfPairs = numberOfPairs
+        self.debug = debug
+        self.numberOfMoves = 0
+        self.lastUncoveredIndex = None
+        self.playField = list(range(1, numberOfPairs + 1)) + list(range(1, numberOfPairs + 1))
+        self.shuffle()
+        if self.debug:
+            print("-1 = to disable debug for one game")
+            print("-2 = to disable debug for all game")
+            print("enter to continue press")
+
+    def printState(self):
+        if self.debug is True:
+            # if debug print plain playField
+            return self.playField
+        temp = []
+        for n, i in enumerate(self.playField):
+            # change real card number to 0
+            if i == -1:
+                temp.append(-1)
+            else:
+                temp.append(0)
+        return temp        
+
+    def state(self):
+        temp = 0
+        for n, i in enumerate(self.playField):
+            # if is in field nonBlank space add one pair
+            if i != -1:
+                temp += 1
+        return temp
+
+    def shuffle(self):
+        random.shuffle(self.playField)
+
     def playOneEngine(self):
         self.engineOne.playAll()
 
@@ -65,36 +108,12 @@ class Game:
             self.lastUncoveredIndex = None
             self.numberOfMoves += 1
 
-    def printState(self):
-        if self.debug is True:
-            # if debug print plain playField
-            return self.playField
-        temp = []
-        for n, i in enumerate(self.playField):
-            # change real card number to 0
-            if i == -1:
-                temp.append(-1)
-            else:
-                temp.append(0)
-        return temp        
-
-    def state(self):
-        temp = 0
-        for n, i in enumerate(self.playField):
-            # if is in field nonBlank space add one pair
-            if i != -1:
-                temp += 1
-        return temp
-
     def possibleMoves(self):
         tmp = []
         for n, i in enumerate(self.playField):
             if i != -1:
                 tmp.append(n)
         return tmp
-
-    def shuffle(self):
-        random.shuffle(self.playField)
 
     def lastUncoveredCard(self):
         if self.lastUncoveredIndex != None:
@@ -103,21 +122,3 @@ class Game:
                 return [self.playField[self.lastUncoveredIndex], self.lastUncoveredIndex]  
         return -1
 
-    def inicializeEngines(self, engineOne, engineTwo = None):
-        self.engineOne = engineOne
-        self.engineOneScore = 0
-        self.engineTwo = engineTwo
-        self.engineTwoScore = 0
-        self.whichIsOnMove = 0
-
-    def __init__(self, numberOfPairs, debug = False):
-        self.numberOfPairs = numberOfPairs
-        self.debug = debug
-        self.numberOfMoves = 0
-        self.lastUncoveredIndex = None
-        self.playField = list(range(1, numberOfPairs + 1)) + list(range(1, numberOfPairs + 1))
-        self.shuffle()
-        if self.debug:
-            print("-1 = to disable debug for one game")
-            print("-2 = to disable debug for all game")
-            print("enter to continue press")

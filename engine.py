@@ -6,20 +6,21 @@ import math
 class EngineRandom:
     """Only random moves"""
 
-    def playAll(self):
-        while self.game.state() > 0:
-            self.playOne()
-
-    def playOne(self):
-        self.game.uncover(math.floor(random.uniform(0, self.numberOfCards)))
-
-    def getNumberOfMoves(self):
-        return self.game.numberOfMoves
-
     def __init__(self, game, debug=False):
         self.game = game
         self.debug = debug
         self.numberOfCards = game.numberOfPairs * 2
+
+    def playAll(self):
+        while self.game.state() > 0:
+            self.playOne()
+
+    def getNumberOfMoves(self):
+        return self.game.numberOfMoves
+
+
+    def playOne(self):
+        self.game.uncover(math.floor(random.uniform(0, self.numberOfCards)))
 
 #############################################################################
 #***************************************************************************#
@@ -27,6 +28,15 @@ class EngineRandom:
 
 class EngineMemory(EngineRandom):
     """Engine with memory of N cards, only for last N cards"""
+
+    def __init__(self, game, sizeOfMemory, debug=False):
+        # referring to parent INIT 
+        super(self.__class__, self).__init__(game, debug) 
+        if sizeOfMemory == -1:
+            self.sizeOfMemory = self.numberOfCards
+        else:
+            self.sizeOfMemory = sizeOfMemory
+        self.memory = []
 
     def playOne(self):
         lastCard = self.game.lastUncoveredCard()
@@ -80,18 +90,10 @@ class EngineMemory(EngineRandom):
             if (self.memory[i])[0] == cardPosition[0]:
                 if (self.memory[i])[1] == cardPosition[1]:
                     return
-        # remove last cards to free up one space 
+        # remove last memorized cards to free up one space 
         while len(self.memory) >= self.sizeOfMemory:
             self.memory.pop(0)
         # append card to end of memory
         self.memory.append(cardPosition)
-
-    def __init__(self, game, sizeOfMemory, debug=False):
-        super(self.__class__, self).__init__(game, debug) # referring to parent INIT 
-        if sizeOfMemory == -1:
-            self.sizeOfMemory = self.numberOfCards
-        else:
-            self.sizeOfMemory = sizeOfMemory
-        self.memory = []
 
 #############################################################################
