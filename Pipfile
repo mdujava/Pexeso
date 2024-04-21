@@ -1,0 +1,10 @@
+[dev-packages]
+flake8 = "*"
+mypy = "*"
+pylint = "*"
+black = "*"
+
+[packages]
+
+[requires]
+python_version = "3"
